@@ -17,7 +17,12 @@ public class Main {
                     Evento.criarEvento();
                     break;
                 case 1:
-                    Evento.escolherEventos();
+                    Evento evento = Evento.escolherEventos();
+                    int acao = 1;
+                    if(evento!=null) acao = JOptionPane.showConfirmDialog(null, "Você gostaria de participar do evento: "+'\n'+evento.mostrarEvento());
+                    if(acao==0) evento.comprarIngresso();
+
+
                     break;
             }
         }while(escolha!=4);

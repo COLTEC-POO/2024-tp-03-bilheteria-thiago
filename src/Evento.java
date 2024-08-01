@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class Evento {
+public abstract class Evento implements receita{
     private String nome;
     private Date data;
     private String local;
@@ -22,12 +22,42 @@ public abstract class Evento {
         this.ingressos = new ArrayList<Ingresso>();
     }
 
+    public void addIngresso(Ingresso ingresso){
+        ingressos.add(ingresso);
+    }
+
+    public ArrayList<Ingresso> getIngressos() {
+        return ingressos;
+    }
+
+    public float getIngressoValor() {
+        return ingressoValor;
+    }
+
+    public int getMaxIngressos() {
+        return maxIngressos;
+    }
+
     public int ingressosDisponiveis(){
         return maxIngressos-ingressos.size();
     }
 
-    public void comprarIngresso(){
+    public int numEntradas(){
+        int t = 0;
+        for(Ingresso i : ingressos) t+=(i instanceof IngressoNormal ? 1 : 0);
+        return t;
+    }
 
+    public int numMeias(){
+        int t = 0;
+        for(Ingresso i : ingressos) t+=(i instanceof IngressoNormal ? 1 : 0);
+        return t;
+    }
+
+    public int numVips(){
+        int t = 0;
+        for(Ingresso i : ingressos) t+=(i instanceof IngressoNormal ? 1 : 0);
+        return t;
     }
 
     public static void criarEvento(){
@@ -35,37 +65,39 @@ public abstract class Evento {
         int escolha = JOptionPane.showOptionDialog(null, "Qual evento você deseja criar?", "NJ",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoes, opcoes[3]);
 
-        String nome = JOptionPane.showInputDialog("Nome do Evento: ");
-        String dataAux = JOptionPane.showInputDialog("Data do Evento: ");
-        Date data = new Date();
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        if(escolha!=3) {
+            String nome = JOptionPane.showInputDialog("Nome do Evento: ");
+            String dataAux = JOptionPane.showInputDialog("Data do Evento: ");
+            Date data = new Date();
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
-        try {
-            data = formato.parse(dataAux);
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(null, "Formato de data invalido!");
-        }
+            try {
+                data = formato.parse(dataAux);
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(null, "Formato de data invalido!");
+            }
 
-        String local = JOptionPane.showInputDialog("Local do Evento: ");
-        String ingressoValorAux = JOptionPane.showInputDialog("Preço do Ingresso: ");
-        float ingressoValor = Float.parseFloat(ingressoValorAux);
+            String local = JOptionPane.showInputDialog("Local do Evento: ");
+            String ingressoValorAux = JOptionPane.showInputDialog("Preço do Ingresso: ");
+            float ingressoValor = Float.parseFloat(ingressoValorAux);
 
-        switch (escolha){
-            case 0:
-                eventos.add(new Filme(nome, data, local, ingressoValor));
-                break;
-            case 2:
-                eventos.add(new Concerto(nome, data, local, ingressoValor));
-                break;
-            case 3:
-                eventos.add(new Teatro(nome, data, local, ingressoValor));
-                break;
+            switch (escolha) {
+                case 0:
+                    eventos.add(new Filme(nome, data, local, ingressoValor));
+                    break;
+                case 1:
+                    eventos.add(new Concerto(nome, data, local, ingressoValor));
+                    break;
+                case 2:
+                    eventos.add(new Teatro(nome, data, local, ingressoValor));
+                    break;
+            }
         }
     }
 
-    public static void escolherEventos(){
+    public static Evento escolherEventos(){
         int opcInt = 1;
-        do {
+        if(eventos.size()>0) {
             Object[] evts = new Object[eventos.size()];
 
             for (int i = 0; i < eventos.size(); ++i) {
@@ -75,17 +107,22 @@ public abstract class Evento {
 
             Object escolha = JOptionPane.showInputDialog(null, "Escolha um evento", "Opçao", JOptionPane.INFORMATION_MESSAGE, null, evts, evts[0]);
 
-
             for (int i = 0; i < eventos.size(); ++i) {
                 if (evts[i] == escolha) {
-                    opcInt = JOptionPane.showConfirmDialog(null, eventos.get(i).mostrarEvento() + '\n' + "Você gostaria de participar do evento?" + '\n', "Evento", JOptionPane.YES_NO_OPTION);
-                    break;
+                    return eventos.get(i);
                 }
             }
-        }while(opcInt!=0);
+        }else{
+            JOptionPane.showMessageDialog(null, "Não há eventos disponíveis.");
+        }
+            return null;
     }
 
     public String mostrarEvento(){
         return "Evento: "+nome+'\n'+"Data: "+data+'\n'+"Local: "+local+'\n'+"Valor do Ingresso: "+ingressoValor+'\n';
     }
+
+    abstract void comprarIngresso();
+
+    //public abstract float calcularReceita();
 }
