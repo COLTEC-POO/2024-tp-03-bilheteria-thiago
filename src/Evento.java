@@ -60,6 +60,33 @@ public abstract class Evento implements receita{
         return t;
     }
 
+    public static ArrayList<Evento> getEventos() {
+        return eventos;
+    }
+
+    public static void criarEvento(String nome, String dataAux, String local, float ingressoValor, int tipo){
+        Date data = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            data = formato.parse(dataAux);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Formato de data invalido!");
+        }
+
+        switch(tipo){
+                case 0:
+                    eventos.add(new Filme(nome, data, local, ingressoValor));
+                    break;
+            case 1:
+                eventos.add(new Concerto(nome, data, local, ingressoValor));
+                break;
+            case 2:
+                eventos.add(new Teatro(nome, data, local, ingressoValor));
+                break;
+            }
+    }
+
     public static void criarEvento(){
         Object[] opcoes = {"Filme", "Concerto", "Teatro", "Voltar"};
         int escolha = JOptionPane.showOptionDialog(null, "Qual evento você deseja criar?", "NJ",
@@ -118,11 +145,9 @@ public abstract class Evento implements receita{
             return null;
     }
 
-    public String mostrarEvento(){
-        return "Evento: "+nome+'\n'+"Data: "+data+'\n'+"Local: "+local+'\n'+"Valor do Ingresso: "+ingressoValor+'\n';
+    public String toString(){
+        return "Evento: "+nome+'\n'+"Data: "+data+'\n'+"Local: "+local+'\n'+"Valor do Ingresso: R$"+String.format("%.2f", ingressoValor)+'\n';
     }
 
     abstract void comprarIngresso();
-
-    //public abstract float calcularReceita();
 }
