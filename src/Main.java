@@ -1,3 +1,5 @@
+package src;
+
 import jdk.jfr.Event;
 
 import javax.swing.*;
@@ -16,9 +18,10 @@ public class Main {
         }
 
         do {
-            Object[] opcoes = {"Criar um evento", "Participar de um evento", "Exibir Eventos", "Exibir Receita", "Sair"};
+            Object[] opcoes = {"Criar um evento", "Participar de um evento", "Exibir Eventos", "Exibir Receita", "Exibir Ingressos", "Sair"};
             escolha = JOptionPane.showOptionDialog(null, "O que deseja fazer?", "Menu",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoes, opcoes[4]);
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoes, opcoes[5]);
+
             Evento evento;
             switch(escolha){
                 case 0:
@@ -30,7 +33,6 @@ public class Main {
                     if(evento!=null) acao = JOptionPane.showConfirmDialog(null, "Você gostaria de participar do evento: "+'\n'+evento.toString());
                     if(acao==0) evento.comprarIngresso();
                     break;
-
                 case 2:
                     if(Evento.getEventos().size() > 0) {
                         String aux = new String();
@@ -41,11 +43,16 @@ public class Main {
                     }else{
                         JOptionPane.showMessageDialog(null, "Não há eventos disponíveis.");
                     }
+                    break;
                 case 3:
                     evento = Evento.escolherEventos();
-                    JOptionPane.showMessageDialog(null, "Receita Bruta: R$"+ String.format("%.2f", evento.calcularReceita()));
+                    evento.imprimirExtrato();
+                    break;
+                case 4:
+                    evento = Evento.escolherEventos();
+                    evento.mostrarIngressos();
                     break;
             }
-        }while(escolha!=4);
+        }while(escolha!=5);
     }
 }

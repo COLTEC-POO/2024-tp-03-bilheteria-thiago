@@ -1,3 +1,5 @@
+package src;
+
 import javax.swing.*;
 import java.util.Date;
 
@@ -13,13 +15,9 @@ public class Teatro extends Evento{
         return t;
     }
 
-    public void imprimirExtrato(){
-        JOptionPane.showMessageDialog(null, "Receita: " + calcularReceita());
-    }
-
     void comprarIngresso(){
         String[] opcoes = {"Entrada", "Meia-Entrada", "Vip"};
-        int escolha  = JOptionPane.showOptionDialog(null, "Tipo de Ingresso", "Ingresso", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoes, opcoes[0]);
+        int escolha  = JOptionPane.showOptionDialog(null, "Tipo de Ingresso"+'\n'+"Entrada: R$"+String.format("%.2f", getIngressoValor())+'\n'+'\n'+"Meia-Entrada: R$ "+String.format("%.2f", getIngressoValor()/2.0)+'\n'+"VIP: R$"+String.format("%.2f", getIngressoValor()*2), "Ingresso", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoes, opcoes[0]);
 
         if(ingressosDisponiveis()>0){
             switch(escolha) {
@@ -38,5 +36,9 @@ public class Teatro extends Evento{
                     break;
             }
         }
+    }
+
+    public void imprimirExtrato() {
+        JOptionPane.showMessageDialog(null, "R$: "+String.format("%.2f", calcularReceita()));
     }
 }

@@ -1,3 +1,6 @@
+package src;
+
+import javax.swing.*;
 import java.util.Date;
 
 public abstract class Ingresso implements receita{
@@ -12,4 +15,18 @@ public abstract class Ingresso implements receita{
     public float getValor() {
         return valor;
     }
+
+    public float calcularReceita() {
+        return valor;
+    }
+
+    public void imprimirExtrato() {
+        JOptionPane.showMessageDialog(null, valor);
+    }
+
+    public String toString(){
+        return "Data: "+data+'\n'+"Valor: R$ "+String.format("%.2f", valor)+'\n';
+    }
+
+
 }
