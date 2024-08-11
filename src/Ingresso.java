@@ -1,6 +1,7 @@
 
 
 import javax.swing.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class Ingresso implements receita{
@@ -25,7 +26,10 @@ public abstract class Ingresso implements receita{
     }
 
     public String toString(){
-        return "Data: "+data+'\n'+"Valor: R$ "+String.format("%.2f", valor)+'\n';
+        String classe = this.getClass().toString();
+        classe = classe.substring(5, classe.length());
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        return "Tipo: "+classe+'\n'+"Data: "+formato.format(data)+'\n'+"Valor: R$ "+String.format("%.2f", valor)+'\n';
     }
 
 
