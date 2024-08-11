@@ -1,4 +1,6 @@
-package src;
+
+
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.swing.*;
 import java.text.ParseException;
@@ -6,20 +8,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static java.lang.Class.forName;
 
 public abstract class Evento implements receita {
     private String nome;
     private Date data;
+    private Date hora;
     private String local;
     private float ingressoValor;
     private int maxIngressos;
     private ArrayList<Ingresso> ingressos;
     private static ArrayList<Evento> eventos = new ArrayList<Evento>();
 
-    Evento(String nome, Date data, String local, float ingressoValor, int maxIngressos){
+    Evento(String nome, Date data, Date hora, String local, float ingressoValor, int maxIngressos){
         this.nome = nome;
         this.data = data;
+        this.hora = hora;
         this.local = local;
         this.ingressoValor = ingressoValor;
         this.maxIngressos = maxIngressos;
@@ -68,9 +71,11 @@ public abstract class Evento implements receita {
         return eventos;
     }
 
-    public static void criarEvento(String nome, String dataAux, String local, float ingressoValor, int tipo){
+    public static void criarEvento(String nome, String dataAux, String horaAux, String local, float ingressoValor, int tipo){
         Date data = new Date();
+        Date hora = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatoHoras = new SimpleDateFormat("HH:mm:ss");
 
         try {
             data = formato.parse(dataAux);
@@ -78,15 +83,21 @@ public abstract class Evento implements receita {
             JOptionPane.showMessageDialog(null, "Formato de data invalido!");
         }
 
+        try {
+            hora = formatoHoras.parse(horaAux);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Formato de data invalido!");
+        }
+
         switch(tipo){
                 case 0:
-                    eventos.add(new Filme(nome, data, local, ingressoValor));
+                    eventos.add(new Filme(nome, data, hora, local, ingressoValor));
                     break;
             case 1:
-                eventos.add(new Concerto(nome, data, local, ingressoValor));
+                eventos.add(new Concerto(nome, data, hora,local, ingressoValor));
                 break;
             case 2:
-                eventos.add(new Teatro(nome, data, local, ingressoValor));
+                eventos.add(new Teatro(nome, data, hora, local, ingressoValor));
                 break;
             }
     }
@@ -100,7 +111,9 @@ public abstract class Evento implements receita {
             String nome = JOptionPane.showInputDialog("Nome do Evento: ");
             if(nome==null) return;
             Date data = new Date();
+            Date hora = new Date();
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatoHoras = new SimpleDateFormat("HH:mm:ss");
             boolean dataIncorreta = false;
             do {
                 try {
@@ -115,6 +128,20 @@ public abstract class Evento implements receita {
                 }
             }while(dataIncorreta);
 
+            boolean horaIncorreta = false;
+            do {
+                String horaAux = JOptionPane.showInputDialog("Hora do Evento (HH:mm:ss): ");
+
+                try {
+                    if(horaAux!=null) hora = formatoHoras.parse(horaAux);
+                    else return;
+                    horaIncorreta = false;
+                } catch (ParseException e) {
+                    JOptionPane.showMessageDialog(null, "Formato de data invalido!");
+                    horaIncorreta = true;
+                }
+            }while(horaIncorreta);
+
             String local = JOptionPane.showInputDialog("Local do Evento: ");
             if(local==null) return;
             String ingressoValorAux = JOptionPane.showInputDialog("Preço do Ingresso (Ex.: 15.50): ");
@@ -123,13 +150,13 @@ public abstract class Evento implements receita {
 
             switch (escolha) {
                 case 0:
-                    eventos.add(new Filme(nome, data, local, ingressoValor));
+                    eventos.add(new Filme(nome, data, hora, local, ingressoValor));
                     break;
                 case 1:
-                    eventos.add(new Concerto(nome, data, local, ingressoValor));
+                    eventos.add(new Concerto(nome, data, hora, local, ingressoValor));
                     break;
                 case 2:
-                    eventos.add(new Teatro(nome, data, local, ingressoValor));
+                    eventos.add(new Teatro(nome, data, hora, local, ingressoValor));
                     break;
             }
         }
@@ -159,7 +186,11 @@ public abstract class Evento implements receita {
     }
 
     public String toString(){
-        return "Evento: "+nome+'\n'+"Tipo: "+this.getClass()+'\n'+"Data: "+data+'\n'+"Local: "+local+'\n'+"Valor do Ingresso: R$"+String.format("%.2f", ingressoValor)+'\n';
+        String classe = this.getClass().toString();
+        classe = classe.substring(5, classe.length());
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatoHoras = new SimpleDateFormat("HH:mm:ss");
+        return "Evento: "+nome+'\n'+"Tipo: "+classe+'\n'+"Data: "+ formato.format(data)+'\n'+"Hora: "+formatoHoras.format(hora)+'\n'+"Local: "+local+'\n'+"Nº de Ingressos Disponíveis: "+ingressosDisponiveis()+'\n'+"Nº de Ingressos Vendidos: "+(maxIngressos-ingressosDisponiveis())+'\n'+"Valor do Ingresso: R$"+String.format("%.2f", ingressoValor)+'\n';
     }
 
     abstract void comprarIngresso();

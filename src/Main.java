@@ -1,4 +1,4 @@
-package src;
+
 
 import jdk.jfr.Event;
 
@@ -14,7 +14,7 @@ public class Main {
         int escolha = 4;
 
         for(int i = 0; i < 5; ++i){
-            Evento.criarEvento("a", "12/12/1222", "a", 10, 0);
+            Evento.criarEvento("a", "12/12/1222", "12:12:12", "a", 10, 0);
         }
 
         do {
@@ -46,11 +46,11 @@ public class Main {
                     break;
                 case 3:
                     evento = Evento.escolherEventos();
-                    evento.imprimirExtrato();
+                    if(evento!=null) evento.imprimirExtrato();
                     break;
                 case 4:
                     evento = Evento.escolherEventos();
-                    evento.mostrarIngressos();
+                    if(evento!=null) evento.mostrarIngressos();
                     break;
             }
         }while(escolha!=5);

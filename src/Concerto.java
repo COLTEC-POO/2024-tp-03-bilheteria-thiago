@@ -1,11 +1,11 @@
-package src;
+
 
 import javax.swing.*;
 import java.util.Date;
 
 public class Concerto extends Evento {
-    Concerto(String nome, Date data, String local, float ingressoValor) {
-        super(nome, data, local, ingressoValor, 150);
+    Concerto(String nome, Date data, Date hora, String local, float ingressoValor) {
+        super(nome, data, hora, local, ingressoValor, 150);
     }
 
     public float calcularReceita() {
